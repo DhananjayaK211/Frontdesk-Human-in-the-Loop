@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Supervisor Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { color: #333; }
+        .container { display: flex; gap: 30px; }
+        .panel { flex: 1; border: 1px solid #ccc; padding: 15px; border-radius: 5px; }
+        .pending-request { margin-bottom: 20px; padding: 10px; border: 1px solid orange; background-color: #fff8e1; border-radius: 4px; }
+        .resolved-request { background-color: #e8f5e9; border: 1px solid green; }
+        .unresolved-request { background-color: #ffebee; border: 1px solid red; }
+        form input[type="text"] { width: 80%; padding: 8px; margin-right: 10px; }
+        form button { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 3px; }
+        a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>Frontdesk AI Supervisor Dashboard</h1>
+    <p>
+        <a href="/knowledge-base">View Learned Knowledge Base</a>
+    </p>
+
+    <h2>Pending Requests (Action Required!)</h2>
+    {% if pending_requests %}
+        {% for req in pending_requests %}
+        <div class="pending-request">
+            <strong>Request ID:</strong> {{ req.id }} (Customer: {{ req.customer_id }})<br>
+            <strong>Question:</strong> <em>{{ req.caller_question }}</em>
+            <form action="{{ url_for('resolve_request_endpoint', request_id=req.id) }}" method="post" style="margin-top: 10px;">
+                <input type="text" name="answer" placeholder="Supervisor Answer" required>
+                <button type="submit">Submit Answer & Call Back</button>
+            </form>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No pending requests. Great job!</p>
+    {% endif %}
+
+    <hr>
+
+    <h2>Request History</h2>
+    {% for req in all_requests %}
+    <div class="request {{ req.status | lower }}-request" style="margin-bottom: 8px;">
+        <strong>ID:</strong> {{ req.id }} | 
+        <strong>Status:</strong> **{{ req.status }}** |
+        <strong>Question:</strong> {{ req.caller_question }} |
+        {% if req.supervisor_answer %}
+            <strong>Answer:</strong> {{ req.supervisor_answer }}
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <hr>
+    <h2>Test AI Agent (Simulate Call)</h2>
+    <form action="{{ url_for('handle_incoming_call') }}" method="post">
+        <label for="customer_id">Customer ID/Phone (Mock):</label>
+        <input type="text" name="customer_id" value="555-8888" required><br><br>
+        <label for="question">Question for AI:</label>
+        <input type="text" name="question" placeholder="e.g. Do you offer pedicures?" required>
+        <button type="submit">Simulate Call</button>
+    </form>
+
+</body>
+</html>

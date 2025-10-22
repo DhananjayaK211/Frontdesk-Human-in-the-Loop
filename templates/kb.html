@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Learned Knowledge Base</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Learned Answers Knowledge Base (AI's Brain)</h1>
+    <p>These are the answers the AI has learned from human supervisors.</p>
+    <p><a href="/">Back to Supervisor Dashboard</a></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Question Key</th>
+                <th>Learned Answer</th>
+                <th>Source Request ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in kb_entries %}
+            <tr>
+                <td>{{ entry.question_key }}</td>
+                <td>{{ entry.answer }}</td>
+                <td><a href="/#{{ entry.source_request_id }}">{{ entry.source_request_id }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
